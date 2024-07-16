@@ -20,7 +20,7 @@ function SalvaPropostaServico(executionContext : Xrm.Events.EventContext) {
     var formContext = executionContext.getFormContext();
     var contrato = formContext.getAttribute("crb00_contrato").getValue();
     if (contrato !== null || contrato == "") {
-        formContext;
+        formContext.data.save();
     }
 }
 function ConverterUnidade(executionContext : Xrm.Events.EventContext) {
@@ -82,4 +82,25 @@ function CriteriosPadrao(executionContext : Xrm.PageContext) {
         );
     });
 }
+function OpenTarefaquickCreate(id : string) {
+    var parameters : any= {};  
+   //Set the Parent Customer column value to "Contoso".  
+   parameters["crb00_itemld"] = id.replace(/[{}]/g, "");
+   //parameters["hsbc_customername"] = "Catalina Bedford";  
+   //parameters["hsbc_customertype"] = "contact";  
+   //parameters["hsbc_type"] = 768280000;
+  
+      var entityFormOptions : any = {};
+   
+      entityFormOptions["entityName"] = "crb00_novatabela1";
+      entityFormOptions["useQuickCreateForm"] = true;
+   
+      Xrm.Navigation.openForm(entityFormOptions,parameters).then(
+          function (success) {
+              console.log(success);
+          },
+          function (error) {
+              console.log(error);
+          });
+  }
 //# sourceMappingURL=fse.js.map

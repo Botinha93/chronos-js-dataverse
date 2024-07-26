@@ -92,6 +92,7 @@ function OpenTarefaquickCreate(id : string) {
         parameters["crb00_itensdocontrato"] = ld["_crb00_itemdocontrato_value"];
         parameters["crb00_contrato"] = ld["_crb00_contrato_value"];
         parameters["crb00_hhacumulado"] = "0";
+        parameters["crb00_titulo"] = ld["crb00_titulodocumento"];
         entityFormOptions["entityName"] = "crb00_novatabela1";
         entityFormOptions["useQuickCreateForm"] = true;
     
@@ -115,7 +116,8 @@ function CalculaHora(executionContext : Xrm.Events.EventContext) {
 }
 function CalcularPred(ids : Array<string>){
     ids.forEach(function(id){
-
+        Xrm.WebApi.retrieveRecord("crb00_newtable2", id).then(function(ld :any){
+        })
     })
 }
 //# sourceMappingURL=fse.js.map

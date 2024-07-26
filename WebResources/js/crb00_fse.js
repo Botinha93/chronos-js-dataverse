@@ -104,4 +104,7 @@ function CalculaHora(executionContext) {
     var formContext = executionContext.getFormContext();
     formContext.getAttribute("crb00_tempo").setValue(Math.abs(formContext.getAttribute("crb00_horainicio").getValue() - formContext.getAttribute("crb00_horafim").getValue()) / 60000);
 }
+function CalcularPred(ids) {
+    console.log(ids);
+}
 //# sourceMappingURL=crb00_fse.js.map

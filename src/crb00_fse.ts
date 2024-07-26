@@ -86,21 +86,31 @@ function OpenTarefaquickCreate(id : string) {
     var parameters : any= {};  
    //Set the Parent Customer column value to "Contoso".  
    parameters["crb00_itemld"] = id.replace(/[{}]/g, "");
+   Xrm.WebApi.retrieveRecord("crb00_fse_listadedocumentos", parameters["crb00_itemld"]).then(function(ld :any){
+        var entityFormOptions : any = {};
+        //_crb00_itemdaproposta_value
+        parameters["crb00_itensdocontrato"] = ld["_crb00_itemdocontrato_value"];
+        parameters["crb00_contrato"] = ld["_crb00_contrato_value"];
+        parameters["crb00_hhacumulado"] = "0";
+        entityFormOptions["entityName"] = "crb00_novatabela1";
+        entityFormOptions["useQuickCreateForm"] = true;
+    
+        Xrm.Navigation.openForm(entityFormOptions,parameters).then(
+            function (success) {
+                console.log(success);
+            },
+            function (error) {
+                console.log(error);
+            });
+   },function (error) {
+        console.log(error);
+    });
    //parameters["hsbc_customername"] = "Catalina Bedford";  
    //parameters["hsbc_customertype"] = "contact";  
-   //parameters["hsbc_type"] = 768280000;
-  
-      var entityFormOptions : any = {};
-   
-      entityFormOptions["entityName"] = "crb00_novatabela1";
-      entityFormOptions["useQuickCreateForm"] = true;
-   
-      Xrm.Navigation.openForm(entityFormOptions,parameters).then(
-          function (success) {
-              console.log(success);
-          },
-          function (error) {
-              console.log(error);
-          });
+   //parameters["hsbc_type"] = 768280000; 
   }
+function CalculaHora(executionContext : Xrm.Events.EventContext) {
+    var formContext = executionContext.getFormContext();
+    formContext.getAttribute("crb00_tempo").setValue(Math.abs(formContext.getAttribute("crb00_horainicio").getValue() - formContext.getAttribute("crb00_horafim").getValue()) / 60000);
+}
 //# sourceMappingURL=fse.js.map

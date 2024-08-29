@@ -114,10 +114,74 @@ function CalculaHora(executionContext : Xrm.Events.EventContext) {
     var formContext = executionContext.getFormContext();
     formContext.getAttribute("crb00_tempo").setValue(Math.abs(formContext.getAttribute("crb00_horainicio").getValue() - formContext.getAttribute("crb00_horafim").getValue()) / 60000);
 }
-function CalcularPred(ids : Array<string>){
-    ids.forEach(function(id){
-        Xrm.WebApi.retrieveRecord("crb00_newtable2", id).then(function(ld :any){
-        })
+function addMinutes(date : Date, minutes : number) {
+    return new Date(date.getTime() + minutes*60000);
+}
+async function CalcularPred(ids : Array<string>){
+    Xrm.Utility.showProgressIndicator("Atualizando datas")
+    var arrayPred = new Map<number,{valor : any, percorrido : boolean, update : any}>();
+    for (let index = 0; index < ids.length; index++) {
+        const id = ids[index];
+        var pred : {valor : any, percorrido : boolean, update : any} = {valor : await Xrm.WebApi.retrieveRecord("crb00_newtable2", id), percorrido : false, update : {}}
+        console.log(pred)
+        Xrm.Utility.showProgressIndicator("Recuperando Predeceções")
+        if(pred.valor["crb00_predecessao"] == null || pred.valor["crb00_predecessao"] === "" && pred.valor["crb00_datareal"] == null || pred.valor["crb00_datareal"] === ""){
+            var ld = await Xrm.WebApi.retrieveRecord("crb00_fse_listadedocumentos", pred.valor["_crb00_itemdald_value"].replace(/[{}]/g, ""));
+            var itemprop = await Xrm.WebApi.retrieveRecord("crb00_itemporpostacomercial", ld["_crb00_itemdaproposta_value"].replace(/[{}]/g, ""));
+            var proposta = await Xrm.WebApi.retrieveRecord("crb00_propostacomercial", itemprop["_crb00_proposta_value"].replace(/[{}]/g, ""));
+            pred.valor["crb00_datafim"] = addMinutes(new Date(proposta["crb00_datadeinicioestimada"]), pred.valor["crb00_duracao"]);
+            pred.update["crb00_datafim"] = pred.valor["crb00_datafim"]
+            pred.percorrido =true;
+        }
+        arrayPred.set(pred.valor["crb00_item"],pred);
+    }
+    Xrm.Utility.showProgressIndicator("Calculando estimativas de fim")
+    arrayPred.forEach(function(value, key) {
+        recursivePred(key,arrayPred);
+        var ld = {"crb00_dataprevista" : value.valor["crb00_datafim"] } 
+        Xrm.WebApi.updateRecord("crb00_fse_listadedocumentos", value.valor["_crb00_itemdald_value"].replace(/[{}]/g, ""), ld);
+        Xrm.WebApi.updateRecord("crb00_newtable2", value.valor["crb00_newtable2id"].replace(/[{}]/g, ""), value.update);
     })
+    Xrm.Utility.closeProgressIndicator()
+    Xrm.Page.data.refresh(true)
+}
+function recursivePred(anterior : number, arrayPred : Map<number,{valor : any, percorrido : boolean, update : any}>){
+    if(!arrayPred.get(anterior)!.percorrido){
+        var predecessoes = (<string> arrayPred.get(anterior)!.valor["crb00_predecessao"]).split(',').map((item: string)=>item.replace(/\D/g,''));
+        for (let index = 0; index < predecessoes.length; index++) {
+            const pred = arrayPred.get(Number.parseInt(predecessoes[index]));
+            if(pred != undefined){
+                if(pred!.valor["crb00_predecessao"] != null || pred!.valor["crb00_predecessao"] !== ""){
+                    recursivePred(pred!.valor["crb00_item"],arrayPred);
+                }
+                arrayPred.get(anterior)!.valor["crb00_datafim"] = addMinutes(new Date(pred!.valor["crb00_datafim"]), pred!.valor["crb00_duracao"]);
+                arrayPred.get(anterior)!.update["crb00_datafim"] = arrayPred.get(anterior)!.valor["crb00_datafim"];
+                console.log(arrayPred.get(anterior)!.valor["crb00_datafim"])
+                arrayPred.get(anterior)!.percorrido = true;
+            }
+        }
+    }
+}
+function updateAndamento(executionContext : Xrm.Events.EventContext) {
+    var formContext = executionContext.getFormContext();
+    Xrm.WebApi.retrieveRecord("crb00_tipodedocumentofse", formContext.getAttribute("crb00_documentofse").getValue()[0].id.replace(/[{}]/g, "")).then(function(fse :any){
+        formContext.getAttribute("crb00_codigofse").setValue(fse["crb00_sigla"]);
+        formContext.getAttribute("crb00_duracao").setValue(fse["crb00_duracao"]);
+        formContext.getAttribute("crb00_nome").setValue(fse["crb00_nome"]);
+    })
+}
+function documentoFSE(executionContext : Xrm.Events.EventContext) {
+    var formContext = executionContext.getFormContext();
+    Xrm.WebApi.retrieveRecord("crb00_tipodedocumentofse", formContext.getAttribute("crb00_documentofse").getValue()[0].id.replace(/[{}]/g, "")).then(function(fse :any){
+        formContext.getAttribute("crb00_codigofse").setValue(fse["crb00_sigla"]);
+        formContext.getAttribute("crb00_duracao").setValue(fse["crb00_duracao"]);
+        formContext.getAttribute("crb00_nome").setValue(fse["crb00_nome"]);
+    })
+}
+async function gerarBM(primaryControl :Xrm.FormContext) {
+    var formContext = primaryControl;    
+    var lds = await Xrm.WebApi.retrieveRecord("crb00_fse_listadedocumentos", pred.valor["_crb00_itemdald_value"].replace(/[{}]/g, ""));
+    var itemprop = await Xrm.WebApi.retrieveRecord("crb00_itemporpostacomercial", ld["_crb00_itemdaproposta_value"].replace(/[{}]/g, ""));
+    var proposta = await Xrm.WebApi.retrieveRecord("crb00_propostacomercial", itemprop["_crb00_proposta_value"].replace(/[{}]/g, ""));
 }
 //# sourceMappingURL=fse.js.map

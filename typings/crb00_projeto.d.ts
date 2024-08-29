@@ -1,52 +1,30 @@
 /// <reference path="../node_modules/@types/xrm/index.d.ts" />
-declare namespace Crb00_fse_listadedocumentosEnum {
-    const enum statuscode {
-        AtivoA = 1,
-        InativoA = 2,
-    }
-
+declare namespace Crb00_projetoEnum {
     const enum statecode {
         AtivoA = 0,
         InativoA = 1,
     }
 
+    const enum statuscode {
+        AtivoA = 1,
+        InativoA = 2,
+    }
+
 }
 
 declare namespace Xrm {
-    type Crb00_fse_listadedocumentos = Omit<FormContext, 'getAttribute'> & Omit<FormContext, 'getControl'> & Crb00_fse_listadedocumentosAttributes;
+    type Crb00_projeto = Omit<FormContext, 'getAttribute'> & Omit<FormContext, 'getControl'> & Crb00_projetoAttributes;
 
     interface EventContext {
-        getFormContext(): Crb00_fse_listadedocumentos;
+        getFormContext(): Crb00_projeto;
     }
 
-    interface Crb00_fse_listadedocumentosAttributes {
-        getAttribute(name: "crb00_avanco"): Attributes.NumberAttribute;
+    interface Crb00_projetoAttributes {
         getAttribute(name: "crb00_contrato"): Attributes.LookupAttribute;
         getAttribute(name: "crb00_contratoname"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_dataprevista"): Attributes.DateAttribute;
-        getAttribute(name: "crb00_datareal"): Attributes.DateAttribute;
-        getAttribute(name: "crb00_fse_listadedocumentosid"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_grd"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_itemdaproposta"): Attributes.LookupAttribute;
-        getAttribute(name: "crb00_itemdapropostaname"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_itemdocontrato"): Attributes.LookupAttribute;
-        getAttribute(name: "crb00_itemdocontratoname"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_novacoluna"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_numerodocliente"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_numerofse"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_predececao"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_projeto"): Attributes.LookupAttribute;
-        getAttribute(name: "crb00_projetoname"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_restricao"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_revisao"): Attributes.NumberAttribute;
-        getAttribute(name: "crb00_tipodedocumento"): Attributes.LookupAttribute;
-        getAttribute(name: "crb00_tipodedocumentoname"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulo1"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulo2"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulo3"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulo4"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulo5"): Attributes.StringAttribute;
-        getAttribute(name: "crb00_titulodocumento"): Attributes.StringAttribute;
+        getAttribute(name: "crb00_projetoid"): Attributes.StringAttribute;
+        getAttribute(name: "crb00_prt"): Attributes.StringAttribute;
+        getAttribute(name: "crb00_titulo"): Attributes.StringAttribute;
         getAttribute(name: "createdby"): Attributes.LookupAttribute;
         getAttribute(name: "createdbyname"): Attributes.StringAttribute;
         getAttribute(name: "createdbyyominame"): Attributes.StringAttribute;
@@ -76,33 +54,11 @@ declare namespace Xrm {
         getAttribute(name: "timezoneruleversionnumber"): Attributes.NumberAttribute;
         getAttribute(name: "utcconversiontimezonecode"): Attributes.NumberAttribute;
         getAttribute(name: "versionnumber"): Attributes.NumberAttribute;
-        getControl(name: "crb00_avanco"): Controls.NumberControl;
         getControl(name: "crb00_contrato"): Controls.LookupControl;
         getControl(name: "crb00_contratoname"): Controls.StringControl;
-        getControl(name: "crb00_dataprevista"): Controls.DateControl;
-        getControl(name: "crb00_datareal"): Controls.DateControl;
-        getControl(name: "crb00_fse_listadedocumentosid"): Controls.StringControl;
-        getControl(name: "crb00_grd"): Controls.StringControl;
-        getControl(name: "crb00_itemdaproposta"): Controls.LookupControl;
-        getControl(name: "crb00_itemdapropostaname"): Controls.StringControl;
-        getControl(name: "crb00_itemdocontrato"): Controls.LookupControl;
-        getControl(name: "crb00_itemdocontratoname"): Controls.StringControl;
-        getControl(name: "crb00_novacoluna"): Controls.StringControl;
-        getControl(name: "crb00_numerodocliente"): Controls.StringControl;
-        getControl(name: "crb00_numerofse"): Controls.StringControl;
-        getControl(name: "crb00_predececao"): Controls.StringControl;
-        getControl(name: "crb00_projeto"): Controls.LookupControl;
-        getControl(name: "crb00_projetoname"): Controls.StringControl;
-        getControl(name: "crb00_restricao"): Controls.StringControl;
-        getControl(name: "crb00_revisao"): Controls.NumberControl;
-        getControl(name: "crb00_tipodedocumento"): Controls.LookupControl;
-        getControl(name: "crb00_tipodedocumentoname"): Controls.StringControl;
-        getControl(name: "crb00_titulo1"): Controls.StringControl;
-        getControl(name: "crb00_titulo2"): Controls.StringControl;
-        getControl(name: "crb00_titulo3"): Controls.StringControl;
-        getControl(name: "crb00_titulo4"): Controls.StringControl;
-        getControl(name: "crb00_titulo5"): Controls.StringControl;
-        getControl(name: "crb00_titulodocumento"): Controls.StringControl;
+        getControl(name: "crb00_projetoid"): Controls.StringControl;
+        getControl(name: "crb00_prt"): Controls.StringControl;
+        getControl(name: "crb00_titulo"): Controls.StringControl;
         getControl(name: "createdby"): Controls.LookupControl;
         getControl(name: "createdbyname"): Controls.StringControl;
         getControl(name: "createdbyyominame"): Controls.StringControl;
